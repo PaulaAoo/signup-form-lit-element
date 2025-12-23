@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import './info-section.js';
-// import './signup-form.js'; // Comentado temporalmente
+// import './signup-    form.js'; // Comentado temporalmente
 
 class SignupApp extends LitElement {
     static styles = css`

@@ -147,9 +147,140 @@ else if (!this._validateEmail(this.FormData.email)){
 if (!this.FormData.password.trim()){
     newErrors.password= 'password cannot be empty';
 }
-else if (!this.FormData.password.length <6){
+else if (!this.FormData.password.length < 6){
     newErrors.password = 'password must be least 6 characters';  
 
 }
+return newErrors;
+}
+//maneja el evento personalizado 'input-change' de los componentes hijos
+//Este evento viene desde el form-input cuendo el usuario escribe
+_handleInputChange(e){
+//Extremos los datos del evento (detail contiene el payload)
+const {name, value } = e.detail;
+
+//Actualizamos formData de manera inmutable
+this.FormData = {
+    ...this.FormData,
+    [name]: value
+};
+
+//Limpiamos el error de ese campo si existe 
+if (this.errors[name]){
+    this.errors = {
+        ...this.errors,
+        [name]: ''
+
+};
 }
 }
+
+//Maneja el evento 'form-submit' del boton de envío
+async _handleSubmit(e){
+    e.preventDefault(); //prevenimos el comportamiento por defecto
+
+//validamos el formulario
+const validationErrors = this._validateForm();
+
+//si hay errores, los mostramos y detenemos el proceso
+if (Object.keys(validationErrors).length > 0){
+    this.errors = validationErrors;
+    return;
+}
+//Iniciamos el proceso de envío 
+this.isSubmitting = true;
+
+//Simulamos una petición al servidor (2 segundos)
+await new Promise(resolve =>setTimeout(resolve, 2000));
+
+//se finaliza el envío 
+this.isSubmitting = false;
+this.submitted = true;
+
+//despechamos evento personalizado hacia arriba (al padre si existe)
+//bubbles: permite que el evento suba por el Dom tradicional
+//composed: permite atravesar el shadow dom 
+this.dispatchEvent(new CustomEvent('form-submittted', {
+    detail:{
+        data:this.formData,
+        timestamp: new Date().toISOString()
+    },
+
+    bubbles: true,
+    composed: true
+}));
+
+    console.log('Fotmulario enviado:' , this.formData);
+}
+
+//Metodo render: Define la estructura del componente
+//Usa la tag function html de lit 
+
+render(){
+// si el formulario fue enviado, mostramos mensaje de exito
+if(this.submitted){
+    return html`
+    <div class="success-message">
+    <h2>Registration successful</h2>
+    <p> Welcome, ${this.formData.firstName}</p>
+    </div>
+    `;
+}
+
+return html`
+    <div class="form-container">
+    <form @submit=${this._handleSubmit}>
+    <div class="form-fields">
+// componente form-input para first name //
+    <form-input
+        name="firstName"
+        placeholder="First Name"
+        .value=${this.formData.firstName}
+        .error=${this.errors.firstName || ''}
+        @input-change=${this._handleInputChange}></form-input>
+ 
+// componente form-input para last name //
+    <form-input
+        name="lastName"
+        placeholder="Last Name"
+        .value=${this.formData.lastName}
+        .error=${this.errors.lastName|| ''}
+        @input-change=${this._handleInputChange}></form-input>        
+
+// componente form-input para email //
+    <form-input
+        name="email"
+        type="email"
+        placeholder="Email Address"
+        .value=${this.formData.email}
+        .error=${this.errors.email|| ''}
+        @input-change=${this._handleInputChange}></form-input>  
+        
+// componente form-input para password //
+    <form-input
+        name="password
+        type="password"
+        placeholder="Password"
+        .value=${this.formData.password}
+        .error=${this.errors.password|| ''}
+        @input-change=${this._handleInputChange}></form-input>   
+    </div>
+    
+    //Componente submit-button//
+    <submit-button
+    .disabled=${this.isSubmitting}
+    .loanding=${this.isSubmitting}></submit-button>
+
+
+//Terminos y condiciones
+    <p class="terms">
+        By clicking the button. you are agreeing to our
+        <a href='#'>Terms and services</a>
+    </p>
+    <form>
+    </div>
+`;
+}
+}
+
+customElements.define('signup-form', SignupForm);
