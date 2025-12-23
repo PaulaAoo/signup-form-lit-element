@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 class SignupApp extends LitElement {
     static styles = css`
-     /* Variables de colores del diseño */
+     /* var colors design */
     :host {
         display: block;
         min-height: 100vh;
