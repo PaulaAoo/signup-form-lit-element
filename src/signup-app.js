@@ -1,10 +1,13 @@
 import { LitElement, html, css } from 'lit';
+<<<<<<< HEAD
 import './info-section.js';
 // import './signup-    form.js'; // Comentado temporalmente
 
+=======
+>>>>>>> f408db5ff065616cfb847dd02af8e4cc999763d8
 class SignupApp extends LitElement {
     static styles = css`
-     /* Variables de colores del diseño */
+     /* var colors design */
     :host {
         display: block;
         min-height: 100vh;
@@ -93,7 +96,11 @@ class SignupApp extends LitElement {
         .left-side h1 {
             font-size: 28px;
             line-height: 1.3;
-      } 
+        }
+        .left-side p {
+            font-size: 16px;
+        }
+    }
     `;
     
     render() {
