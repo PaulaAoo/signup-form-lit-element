@@ -13,9 +13,12 @@ export class SubmitButton extends LitElement {
     // Estado de carga (muestra spinner)
     // reflect para sincronizar atributo HTML para estilos externos
     loading: { type: Boolean, reflect: true },
-
-    // tipo de botón (submit, button, reset)
-    buttonType: { type: String, attribute: "button-type" },
+   
+    /*// tipo de botón (submit, button, reset)
+    buttontype: { type: String, attribute: "button-type" } 
+    -> se comentaron porque se dejo fijo el tipo submit<--
+    */ 
+    
   };
 
   // Constructor: Inicializa valores por defecto
@@ -24,7 +27,8 @@ export class SubmitButton extends LitElement {
     this.text = "Claim your free trial"; // texto por defecto
     this.disabled = false;
     this.loading = false;
-    this.buttonType = 'submit'; // Por defecto es submit
+    /*this.buttontype = 'submit'; // Por defecto es submit 
+    //  -> se comentaron porque se dejo fijo el tipo submit<-- */
   }
 
   // Estilos encapsulados del componente
@@ -245,7 +249,7 @@ export class SubmitButton extends LitElement {
   render() {
     return html`
       <button
-        type="submit"
+        type="submit" 
         ?disabled=${this.disabled || this.loading}
         @click=${this._handleClick}
         aria-busy=${this.loading ? "true" : "false"}
