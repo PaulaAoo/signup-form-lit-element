@@ -47,12 +47,12 @@ export class SignupForm extends LitElement {
       max-width: 540px;
     }
 
-    .form-container {
+  /*.form-container {
       background: white;
       padding: 40px;
       border-radius: 10px;
       box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
-    }
+    } */
 
     .form-fields {
       display: flex;
@@ -80,7 +80,7 @@ export class SignupForm extends LitElement {
       padding: 20px;
       border-radius: 10px;
       text-align: center;
-      font-weight: 600;
+      font-weight: 600; 
     }
     //estilos cuando isSubmitting=true (gracias a reflect: true)//
     :host([isSubmitting]) .form-container {
@@ -271,7 +271,6 @@ export class SignupForm extends LitElement {
            <!-- Componente submit-button -->
           <submit-button
             .disabled=${this.isSubmitting}
-            .loading=${this.isSubmitting}
           ></submit-button>
 
            <!-- Terminos y condiciones -->
