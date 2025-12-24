@@ -25,7 +25,7 @@ export class SignupForm extends LitElement {
   constructor() {
     super(); // llama al contructor del LitElement
     //Inicializar el form data para campos vacios */
-    this.FormData = {
+    this.formData = {
       firstName: '',
       lastName: '',
       email: '',
