@@ -7,7 +7,7 @@ export class SignupForm extends LitElement {
   /** Definición de propiedades */
   static properties = {
     /** Objeto que almacena los valores de cada campo del formulario */
-    FormData: { type: Object },
+    formData: { type: Object },
 
     /** Objeto que almacena los errores de validación de cada campo del formulario */
     errors: { type: Object },
@@ -15,7 +15,7 @@ export class SignupForm extends LitElement {
     /** Propiedad que indica si el formulario está en proceso de envío */
     /** reflect: true el estado JS con el atributo HTML */
     /** util para aplicar estilos CSS esternos basados en este estado */
-    isSubmitting: { type: Boolean, Reflect: true },
+    isSubmitting: { type: Boolean, reflect: true },
 
     /** Indica si el formulario fue enviado exitosamente */
     submitted: { type: Boolean },
@@ -51,7 +51,7 @@ export class SignupForm extends LitElement {
       background: white;
       padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 8px 0 rgba(0 0 0.15);
+      box-shadow: 0 8px 0 rgba(0, 0, 0, 0.15);
     }
 
     .form-fields {
@@ -197,7 +197,7 @@ export class SignupForm extends LitElement {
     //bubbles: permite que el evento suba por el Dom tradicional
     //composed: permite atravesar el shadow dom
     this.dispatchEvent(
-      new CustomEvent('form-submittted', {
+      new CustomEvent('form-submitted', {
         detail: {
           data: this.formData,
           timestamp: new Date().toISOString(),
@@ -271,7 +271,7 @@ export class SignupForm extends LitElement {
            <!-- Componente submit-button -->
           <submit-button
             .disabled=${this.isSubmitting}
-            .loanding=${this.isSubmitting}
+            .loading=${this.isSubmitting}
           ></submit-button>
 
            <!-- Terminos y condiciones -->
