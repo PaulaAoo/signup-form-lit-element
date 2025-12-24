@@ -1,10 +1,4 @@
 import { LitElement, html, css } from 'lit';
-<<<<<<< HEAD
-import './info-section.js';
-// import './signup-    form.js'; // Comentado temporalmente
-
-=======
->>>>>>> f408db5ff065616cfb847dd02af8e4cc999763d8
 class SignupApp extends LitElement {
     static styles = css`
      /* var colors design */
@@ -115,9 +109,8 @@ class SignupApp extends LitElement {
                 </div>
                 <div class="form-container">
                     <p style="color: #999; text-align: center; padding: 40px 0;">
-                        Aquí irá el formulario de registro :)
+                    <signup-form></signup-form>
                     </p>
-                    <!-- <signup-form></signup-form> -->
                 </div>
                 
             </div>
