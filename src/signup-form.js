@@ -26,10 +26,10 @@ export class SignupForm extends LitElement {
     super(); // llama al contructor del LitElement
     //Inicializar el form data para campos vacios */
     this.FormData = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
     };
     //Inicializar errors sin errores */
     this.errors = {};
@@ -70,6 +70,8 @@ export class SignupForm extends LitElement {
 
     .terms a {
       color: hsl(0, 100%, 74%);
+      text-decoration: none;
+      font-weight: 700;
     }
 
     .success-message {
@@ -91,14 +93,14 @@ export class SignupForm extends LitElement {
   firstUpdated() {
     super.firstUpdated();
     //Enfocamos automaticamente el primer input cuando el componente se monta
-    const firstInput = this.shadowRoot.querySelector("form-input");
+    const firstInput = this.shadowRoot.querySelector('form-input');
     if (firstInput) {
       //usamos requestanimationframe para asegurar que el DOM este listo
       requestAnimationFrame(() => {
         firstInput.focus();
       });
     }
-    console.log("Signupform montado y listo");
+    console.log('Signupform montado y listo');
   }
 
   //optimización del rendimiento
@@ -107,10 +109,9 @@ export class SignupForm extends LitElement {
     super.shouldUpdate(changedProperties);
     //si solo cambio isSubmitting y ya está en false no re-renderizar
     if (
-      changedProperties.has("isSubmitting") &&
+      changedProperties.has('isSubmitting') &&
       !this.isSubmitting &&
-      changedProperties.size === 1
-    ) {
+      changedProperties.size === 1) {
       return false;
     }
 
@@ -129,23 +130,23 @@ export class SignupForm extends LitElement {
 
     //validación del first name
     if (!this.FormData.firstName.trim()) {
-      newErrors.firstName = "First Name cannot be empty";
+      newErrors.firstName = 'First Name cannot be empty';
     }
     //validación del last name
     if (!this.FormData.lastName.trim()) {
-      newErrors.lastName = "Last Name cannot be empty";
+      newErrors.lastName = 'Last Name cannot be empty';
     }
     //validación del email
     if (!this.FormData.email.trim()) {
-      newErrors.email = "email cannot be empty";
+      newErrors.email = 'email cannot be empty';
     } else if (!this._validateEmail(this.FormData.email)) {
-      newErrors.email = "Looks like this is not an email";
+      newErrors.email = 'Looks like this is not an email';
     }
     //validación del password
     if (!this.FormData.password.trim()) {
-      newErrors.password = "password cannot be empty";
+      newErrors.password = 'password cannot be empty';
     } else if (!this.FormData.password.length < 6) {
-      newErrors.password = "password must be least 6 characters";
+      newErrors.password = 'password must be least 6 characters';
     }
     return newErrors;
   }
@@ -158,14 +159,14 @@ export class SignupForm extends LitElement {
     //Actualizamos formData de manera inmutable
     this.FormData = {
       ...this.FormData,
-      [name]: value,
+      [name]: value
     };
 
     //Limpiamos el error de ese campo si existe
     if (this.errors[name]) {
       this.errors = {
         ...this.errors,
-        [name]: "",
+        [name]: '',
       };
     }
   }
@@ -186,7 +187,7 @@ export class SignupForm extends LitElement {
     this.isSubmitting = true;
 
     //Simulamos una petición al servidor (2 segundos)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     //se finaliza el envío
     this.isSubmitting = false;
@@ -196,7 +197,7 @@ export class SignupForm extends LitElement {
     //bubbles: permite que el evento suba por el Dom tradicional
     //composed: permite atravesar el shadow dom
     this.dispatchEvent(
-      new CustomEvent("form-submittted", {
+      new CustomEvent('form-submittted', {
         detail: {
           data: this.formData,
           timestamp: new Date().toISOString(),
@@ -207,7 +208,7 @@ export class SignupForm extends LitElement {
       })
     );
 
-    console.log("Fotmulario enviado:", this.formData);
+    console.log('Formulario enviado:', this.formData);
   }
 
   //Metodo render: Define la estructura del componente
@@ -233,7 +234,7 @@ export class SignupForm extends LitElement {
               name="firstName"
               placeholder="First Name"
               .value=${this.formData?.firstName}
-              .error=${this.errors.firstName || ""}
+              .error=${this.errors.firstName || ''}
               @input-change=${this._handleInputChange}
             ></form-input>
 
@@ -242,7 +243,7 @@ export class SignupForm extends LitElement {
               name="lastName"
               placeholder="Last Name"
               .value=${this.formData?.lastName}
-              .error=${this.errors.lastName || ""}
+              .error=${this.errors.lastName || ''}
               @input-change=${this._handleInputChange}
             ></form-input>
 
@@ -252,7 +253,7 @@ export class SignupForm extends LitElement {
               type="email"
               placeholder="Email Address"
               .value=${this.formData?.email}
-              .error=${this.errors.email || ""}
+              .error=${this.errors.email || ''}
               @input-change=${this._handleInputChange}
             ></form-input>
 
@@ -262,7 +263,7 @@ export class SignupForm extends LitElement {
               type="password"
               placeholder="Password"
               .value=${this.formData?.password}
-              .error=${this.errors.password || ""}
+              .error=${this.errors.password || ''}
               @input-change=${this._handleInputChange}
             ></form-input>
           </div>
@@ -284,4 +285,4 @@ export class SignupForm extends LitElement {
   }
 }
 
-customElements.define("signup-form", SignupForm);
+customElements.define('signup-form', SignupForm);
