@@ -1,6 +1,6 @@
 # Formulario de Registro con Lit Element
    
-   Proyecto desarrollado para el Módulo 3 - Reingeniería con Lit Element
+   Proyecto desarrollado para el Módulo 3 -  webcomponents con Lit Element
    
    ## Descripción
    Formulario de registro completo con validación en tiempo real, construido con Lit Element y componentes web.
