@@ -96,7 +96,13 @@ class SignupApp extends LitElement {
         }
     }
     `;
-    
+    firstUpdated() {
+        super.firstUpdated();
+        console.log('SignupApp inicializado - Layout listo');
+
+        // Puedes agregar inicialización aquí si necesitas
+        // Por ejemplo: medir performance, setup de observers, etc.
+    }
     render() {
         return html`
         <div class="container">
@@ -109,7 +115,7 @@ class SignupApp extends LitElement {
                 </div>
                 <div class="form-container">
                     <p style="color: #999; text-align: center; padding: 40px 0;">
-                    <signup-form></signup-form>
+                    <signup-form @form-submitted="${this._onFormSubmitted}"></signup-form>
                     </p>
                 </div>
                 
@@ -118,7 +124,7 @@ class SignupApp extends LitElement {
         `;
     }
     _onFormSubmitted(e) {
-        console.log('formulario enviado',e.detail.formData);
+        console.log('formulario enviado', e.detail.formData);
     }
 }
 customElements.define('signup-app', SignupApp); 

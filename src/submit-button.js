@@ -1,34 +1,28 @@
 import { LitElement, html, css } from "lit";
 
-/** Componente de botón de envío reutilizable
- * Maneja estados de carga, deshabilitado y dispatch de eventos
+/** 
+ * Componente de botón de envío reutilizable
+ * Maneja estados de carga, deshabilitado
+ * 
+ *  Este botón despacha un evento que el form padre puede escuchar
  */
 export class SubmitButton extends LitElement {
   // Definición de propiedades reactivas
   static properties = {
-    // texto del botón
+    // Texto del botón
     text: { type: String },
     // Estado deshabilitado del botón
-    disabled: { type: Boolean },
+    disabled: { type: Boolean, reflect: true },
     // Estado de carga (muestra spinner)
-    // reflect para sincronizar atributo HTML para estilos externos
-    loading: { type: Boolean, reflect: true },
-   
-    /*// tipo de botón (submit, button, reset)
-    buttontype: { type: String, attribute: "button-type" } 
-    -> se comentaron porque se dejo fijo el tipo submit<--
-    */ 
-    
+    loading: { type: Boolean, reflect: true }
   };
 
   // Constructor: Inicializa valores por defecto
   constructor() {
     super();
-    this.text = "Claim your free trial"; // texto por defecto
+    this.text = "Claim your free trial";
     this.disabled = false;
     this.loading = false;
-    /*this.buttontype = 'submit'; // Por defecto es submit 
-    //  -> se comentaron porque se dejo fijo el tipo submit<-- */
   }
 
   // Estilos encapsulados del componente
@@ -102,7 +96,7 @@ export class SubmitButton extends LitElement {
       }
     }
 
-    /* Texto oculto cuando está cargando */
+    /* Texto con opacidad cuando está cargando */
     .button-content.loading .text {
       opacity: 0.7;
     }
@@ -132,28 +126,16 @@ export class SubmitButton extends LitElement {
 
   /**
    * Ciclo de vida: se ejecuta después del primer render
-   * configura listeners o inicializaciones que requieren el DOM
    */
   firstUpdated() {
     super.firstUpdated();
-    // Obtenemos referencia al botón
     const button = this.shadowRoot.querySelector("button");
+    
     if (button) {
-      // Agregamos listener para efecto ripple
+      // Agregamos listener para efecto ripple visual
       button.addEventListener("click", this._createRipple.bind(this));
-
-      // Configuramos un ResizeObserver para detectar cambios de tamaño
-      // Útil para responder a cambios de layout
-      const resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          console.log(
-            `Button resized: ${entry.contentRect.width}x${entry.contentRect.height}`
-          );
-        }
-      });
-
-      resizeObserver.observe(button);
     }
+    
     console.log("SubmitButton inicializado");
   }
 
@@ -161,8 +143,7 @@ export class SubmitButton extends LitElement {
    * Optimización: evita re-renderizar si los cambios no afectan la UI
    */
   shouldUpdate(changedProperties) {
-    // si solo cambió 'disabled' pero loading es true, no re-renderizar
-    // porque el botón ya está en estado de carga
+    // Si solo cambió 'disabled' pero loading es true, no re-renderizar
     if (
       changedProperties.has("disabled") &&
       this.loading &&
@@ -171,96 +152,76 @@ export class SubmitButton extends LitElement {
       return false;
     }
 
-    // permitir actualización en otros casos
     return true;
   }
 
   /**
    * Crear efecto de onda (ripple) al hacer click
+   * Es solo visual, no afecta la funcionalidad
    */
   _createRipple(e) {
-    // solo si no está deshabilitado
     if (this.disabled || this.loading) return;
 
     const button = e.currentTarget;
     const ripple = document.createElement("span");
 
-    // Calculamos posición del click relativo al botón
     const rect = button.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height);
     const x = e.clientX - rect.left - size / 2;
     const y = e.clientY - rect.top - size / 2;
 
-    // aplicamos estilos al ripple
     ripple.className = "ripple";
     ripple.style.width = ripple.style.height = `${size}px`;
     ripple.style.left = `${x}px`;
     ripple.style.top = `${y}px`;
 
-    // Se agrega el ripple al botón
     button.appendChild(ripple);
 
-    // Eliminamos el ripple después de la animación
     setTimeout(() => ripple.remove(), 600);
   }
 
   /**
-   * Maneja el click del botón
-   * Despacha evento personalizado al padre
+   * MANEJA EL CLICK DEL BOTÓN
+   * Despacha un evento personalizado que el form padre puede escuchar
    */
   _handleClick(e) {
-    // si está deshabilitado o cargando, no hacer nada
+    console.log(' Submit button clicked');
+    
     if (this.disabled || this.loading) {
       e.preventDefault();
       return;
     }
 
-    // despachamos evento personalizado 'form-submit'
-    // bubbles: permite que el evento suba por el DOM
-    // composed: crítico para atravesar shadow DOM
+    // Despachamos evento personalizado 'button-submit'
+    // bubbles: true - sube por el DOM
+    // composed: true - atraviesa Shadow DOM (CRÍTICO)
     this.dispatchEvent(
-      new CustomEvent("form-submit", {
-        detail: {
-          timestamp: new Date().toISOString(),
-          buttonText: this.text,
-        },
+      new CustomEvent('button-submit', {
         bubbles: true,
         composed: true,
+        detail: {
+          timestamp: new Date().toISOString()
+        }
       })
     );
-
-    console.log("Submit button clicked");
-  }
-
-  /** Método público para simular un click desde afuera
-   * útil para testing o control programático
-   */
-  click() {
-    const button = this.shadowRoot.querySelector("button");
-    if (button && !this.disabled && !this.loading) {
-      button.click();
-    }
   }
 
   /**
    * Render: define la estructura del componente
-   * usa expresiones condicionales para mostrar spinner
    */
   render() {
     return html`
       <button
-        type="submit" 
+        type="button"
         ?disabled=${this.disabled || this.loading}
         @click=${this._handleClick}
         aria-busy=${this.loading ? "true" : "false"}
         aria-label=${this.loading ? "Loading..." : this.text}
       >
         <div class="button-content ${this.loading ? "loading" : ""}">
-          <!-- Expresión condicional: muestra spinner si está cargando -->
           ${this.loading
-            ? html` <span class="spinner" role="status"></span> `
+            ? html`<span class="spinner" role="status"></span>`
             : ""}
-          <!-- Texto del botón -->
           <span class="text">
             ${this.loading ? "Processing..." : this.text}
           </span>
